@@ -1,0 +1,16 @@
+[% PROCESS 'common/header.inc' %]
+
+<form method="post" action="/member/twitter/update">
+<input type="hidden" name="user_id" value="[% user_id %]">
+<input type="text" name="text" value="">
+<input type="submit" value="Tweet">
+</form>
+
+<hr>
+[%FOREACH tweet = timeline %]
+<p>[% tweet.text %]</p>
+[%END%]
+
+[% PROCESS 'common/footer.inc' %]
+
+

@@ -1,0 +1,8 @@
+[% PROCESS 'common/header.inc' %]
+
+[% WHILE (l = list.next) %]
+<a href="/member/twitter/tweet?user_id=[% l.user_id %]">[% l.screen_name %]</a><br />
+[% END %]
+
+[% PROCESS 'common/footer.inc' %]
+

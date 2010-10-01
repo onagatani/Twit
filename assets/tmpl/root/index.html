@@ -1,0 +1,16 @@
+<html>
+<head>Login</head>
+<body>
+[% IF fail %]ログインに失敗しました<br />[% END %]
+<form method="post" action="login"> 
+name:<input type="text" name="name"><br />
+passwd:<input type="text" name="passwd"><br />
+<input type="submit" name="login">
+</form>
+
+<hr>
+<a href="/regist/">新規登録</a>
+
+</body>
+</html>
+
