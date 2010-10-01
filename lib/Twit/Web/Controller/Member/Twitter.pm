@@ -33,8 +33,6 @@ sub do_tweet {
 
     my $twitter = _new_twitter($token);
  
-    $twitter->access_token($token->access_token);
-    $twitter->access_token_secret($token->access_token_secret);
     $c->stash->{timeline} = $twitter->user_timeline;
 }
 
@@ -79,7 +77,7 @@ sub do_callback {
         token_secret => '',
     );
 
-    my $param = +{
+    my $token_param = +{
         access_token        => $access_token,
         access_token_secret => $access_token_secret,
         screen_name         => $screen_name,
@@ -92,12 +90,12 @@ sub do_callback {
 
     $twitter = container('db')->single('twitter', $member_param);
     if($twitter){
-        $twitter->update($param);
+        $twitter->update($token_param);
     }
     else {
         container('db')->create('twitter',{
             %$member_param,
-            %$param,
+            %$token_param,
         });
     }
     $c->redirect('/member/twitter/');
