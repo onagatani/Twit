@@ -2,7 +2,15 @@
 <head></head>
 <body>
 
-<form method="post" action="confirm">
+[% IF validator %]
+<ul>
+[% FOREACH mes = validator.get_error_messages %]
+<li>[% mes %]</li>
+[% END %]
+</ul>
+[% END %]
+
+<form method="post" action="/regist/">
 name:<input type="text" name="name"><br />
 passwd:<input type="text" name="passwd"><br />
 email:<input type="text" name="email"><br />
