@@ -2,6 +2,7 @@ package Twit::Web::Controller::Root;
 use Kamui::Web::Controller -base;
 use Twit::Container;
 use Data::Dumper;
+use Digest::SHA qw(sha1_hex);
 
 __PACKAGE__->add_trigger(
     'before_dispatch' => sub {
@@ -21,10 +22,13 @@ sub do_login {
     my %param = map {$_ => $c->req->param($_)}
         qw/name passwd/;
 
+    my $digest = sha1_hex($param{passwd});
+    $param{passwd} = $digest;
+
     my $user = container('db')->single('member', \%param);
 
     if($user){
-        my $member = $c->member($user) or warn 'login fail';
+        my $member = $c->member($user);
 
         my $next_url = $c->session->get('next_url') || '/member/';
 

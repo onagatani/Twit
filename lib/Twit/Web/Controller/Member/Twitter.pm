@@ -32,25 +32,39 @@ sub do_tweet {
     $c->redirect('/member/twitter/') unless $token;
 
     my $twitter = _new_twitter($token);
- 
+
+    $c->stash->{update} = $c->req->param('update');
     $c->stash->{timeline} = $twitter->user_timeline;
 }
 
 sub do_update {
     my ($class, $c, $args) = @_;
 
-    my $token = container('db')->single('twitter', {
-        member_id => $c->member->id,
-        user_id   => $c->req->param('user_id'),
-    });
+    my $text    = $c->req->param('text');
+    my $user_id = $c->req->param('user_id');
 
-    my $twitter = _new_twitter($token);
+    $args->{user_id} = $user_id;
 
-    $c->redirect('/member/twitter/') unless $token;
- 
-    $twitter->update({ status => $c->req->param('text')}); 
+    if ($c->req->is_post_request) {
 
-    $c->redirect('/member/twitter/tweet', {update => 1});
+        my $validator = $c->validator->valid('twitter')->tweet;
+
+        if ($validator->has_error) {
+            $c->stash->{validator} = $validator;
+        }
+        else {
+            my $token = container('db')->single('twitter', {
+                member_id => $c->member->id,
+                user_id   => $user_id,
+            });
+
+            if(my $twitter = _new_twitter($token)){
+                $twitter->update({ status => $text }); 
+                $args->{update} = 1;
+            }
+        }
+    }
+    $c->redirect('/member/twitter/tweet', $args);
 }
 
 sub do_oauth {
