@@ -1,5 +1,15 @@
 [% PROCESS 'common/header.inc' %]
 
+[% IF update %]status updated[% END %]
+
+[% IF validator %]
+<ul>
+[% FOREACH mes = validator.get_error_messages %]
+<li>[% mes %]</li>
+[% END %]
+</ul>
+[% END %]
+
 <form method="post" action="/member/twitter/update">
 <input type="hidden" name="user_id" value="[% user_id %]">
 <input type="text" name="text" value="">
